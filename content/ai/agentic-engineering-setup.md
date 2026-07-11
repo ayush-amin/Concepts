@@ -36,6 +36,25 @@ the IDE — which is why it's tuned specifically for this.
 
 ---
 
+## Context & token tooling
+
+Add-ons that stretch the agent's context window and cut token spend — the
+recurring bottleneck in long agentic sessions:
+
+| Tool | What it does |
+| --- | --- |
+| [Context Mode](https://github.com/mksglu/context-mode) | MCP server that protects an agent's context window via sandboxed tool execution, persistent session memory, and routing enforcement across many agents (Claude Code, Cursor, Copilot, …). |
+| [Context7](https://github.com/upstash/context7) | Feeds up-to-date, version-specific library docs + examples straight to the agent (MCP server, or CLI + Skills mode) — kills stale/hallucinated APIs. |
+| **RTK** (Rust Token Killer) | Token-optimized CLI proxy — rewrites common dev commands (e.g. `git status`) to trim output, ~60–90% token savings on dev operations. |
+| [code-review-graph](https://github.com/tirth8205/code-review-graph) | Local-first Tree-sitter map of the codebase; computes a change's "blast radius" so the agent reviews only affected files instead of the whole repo. |
+| [caveman](https://github.com/JuliusBrussee/caveman) | Claude Code skill that compresses agent **output** ~65% via terse "caveman" phrasing while keeping code/technical accuracy intact. |
+
+Common thread: all fight the same bottleneck — **context is finite and tokens
+cost money/latency**, so the setup leans on tools that feed less, waste less,
+and say less.
+
+---
+
 ## The terminal, tuned for AI development
 
 The [Ghostty](https://ghostty.org) config header literally reads *"Optimized for
