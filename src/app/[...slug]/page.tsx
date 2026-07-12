@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { Markdown } from "@/components/markdown";
 import { ListenButton } from "@/components/tts/listen-button";
+import { ExportMenu } from "@/components/export/export-menu";
 import { getAllNotes, getNoteBySlug } from "@/lib/notes";
 
 export function generateStaticParams() {
@@ -41,11 +42,13 @@ export default async function NotePage({
 
   return (
     <div className="min-h-screen bg-[#fafafa] dark:bg-neutral-950">
-      <Header />
+      <div className="print:hidden">
+        <Header />
+      </div>
 
       <main className="mx-auto max-w-3xl px-6 py-12">
         {/* Breadcrumb */}
-        <nav className="mb-8 flex items-center gap-1.5 text-xs text-neutral-400 dark:text-neutral-500">
+        <nav className="mb-8 flex items-center gap-1.5 text-xs text-neutral-400 print:hidden dark:text-neutral-500">
           <Link href="/" className="transition-colors hover:text-neutral-700 dark:hover:text-neutral-300">
             Notes
           </Link>
@@ -65,7 +68,10 @@ export default async function NotePage({
             <span className="inline-block rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium tracking-wide text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
               {note.group ?? note.categoryLabel}
             </span>
-            <ListenButton title={note.title} text={note.plain} />
+            <div className="flex items-center gap-2 print:hidden">
+              <ListenButton title={note.title} text={note.plain} />
+              <ExportMenu slug={note.slug} body={note.body} />
+            </div>
           </div>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl dark:text-neutral-50">
             {note.title}
@@ -83,7 +89,7 @@ export default async function NotePage({
         </article>
 
         {/* Back link */}
-        <div className="mt-16 border-t border-neutral-200 pt-8 dark:border-neutral-800">
+        <div className="mt-16 border-t border-neutral-200 pt-8 print:hidden dark:border-neutral-800">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-sm font-medium text-neutral-500 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"

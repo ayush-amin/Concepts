@@ -209,3 +209,72 @@ body {
 .prose details[open] > summary::before {
   transform: rotate(90deg);
 }
+
+/* ── Print / "Export as PDF" ───────────────────────────────────────────────
+   Triggered by the ExportMenu → PDF action (window.print). Chrome (header,
+   breadcrumb, action buttons, back link) is hidden inline via `print:hidden`.
+   Here we flatten the theme to black-on-white, force full color for code, and
+   expand collapsed <details> so nothing is lost in the printed page. */
+@media print {
+  :root,
+  .dark {
+    --bg: #ffffff;
+    --fg: #111111;
+    --code-bg: #f6f8fa;
+
+    /* Force GitHub-light syntax tokens: printing from dark mode would otherwise
+       leave bright pastel colors on the light --code-bg, killing contrast. */
+    --hl-fg: #24292e;
+    --hl-comment: #6a737d;
+    --hl-keyword: #d73a49;
+    --hl-string: #032f62;
+    --hl-number: #005cc5;
+    --hl-title: #6f42c1;
+    --hl-attr: #005cc5;
+    --hl-symbol: #e36209;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  /* Print exact background/foreground colors (syntax highlighting, code blocks). */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Fixed overlays (TTS player, command menu backdrop) never belong on paper. */
+  body > [class*="fixed"] {
+    display: none !important;
+  }
+
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+
+  /* Expand collapsible sections so their content prints. */
+  .prose details {
+    background: transparent;
+    border-color: #d0d7de;
+  }
+  .prose details > *:not(summary) {
+    display: revert !important;
+  }
+
+  /* Avoid awkward breaks through code blocks, diagrams, and headings. */
+  .prose pre,
+  .prose .mermaid-diagram,
+  .prose img,
+  .prose table {
+    break-inside: avoid;
+  }
+  .prose h1,
+  .prose h2,
+  .prose h3 {
+    break-after: avoid;
+  }
+}
