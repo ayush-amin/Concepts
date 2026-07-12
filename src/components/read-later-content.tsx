@@ -176,14 +176,20 @@ export function ReadLaterContent() {
                     {TYPE_LABEL[item.type]}
                   </span>
                 </div>
-                <a
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 inline-block text-base font-semibold leading-tight tracking-tight text-neutral-900 hover:underline dark:text-neutral-100"
-                >
-                  {item.title}
-                </a>
+                {item.url ? (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-block text-base font-semibold leading-tight tracking-tight text-neutral-900 hover:underline dark:text-neutral-100"
+                  >
+                    {item.title}
+                  </a>
+                ) : (
+                  <span className="mt-2 inline-block text-base font-semibold leading-tight tracking-tight text-neutral-900 dark:text-neutral-100">
+                    {item.title}
+                  </span>
+                )}
                 {item.by && (
                   <span className="ml-2 text-sm text-neutral-400 dark:text-neutral-500">
                     {item.by}
