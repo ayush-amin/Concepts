@@ -1,0 +1,459 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e4]:
+      - generic [ref=e5]:
+        - link "Concepts" [ref=e6] [cursor=pointer]:
+          - /url: /
+        - navigation [ref=e11]:
+          - button "Search notes" [ref=e12] [cursor=pointer]:
+            - generic [ref=e16]: Search
+            - generic [ref=e17]: ⌘K
+          - link "Notes" [ref=e18] [cursor=pointer]:
+            - /url: /
+          - link "About" [ref=e19] [cursor=pointer]:
+            - /url: /about
+          - button "Toggle theme" [ref=e20] [cursor=pointer]
+    - main [ref=e23]:
+      - navigation [ref=e24]:
+        - link "Notes" [ref=e25] [cursor=pointer]:
+          - /url: /
+        - generic [ref=e26]: /
+        - generic [ref=e27]: AI
+      - generic [ref=e28]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: AI
+          - generic [ref=e31]:
+            - button "Listen to this note" [ref=e32] [cursor=pointer]: Listen
+            - button "Export this note" [ref=e37] [cursor=pointer]: Export
+        - heading "Loop Engineering" [level=1] [ref=e41]
+        - paragraph [ref=e42]: Loop engineering is the practice of designing the feedback cycle an AI coding agent runs through to ship real work. The model is one piece — the loop around…
+      - article [ref=e43]:
+        - paragraph [ref=e44]: Loop engineering is the practice of designing the feedback cycle an AI coding agent runs through to ship real work. The model is one piece — the loop around it (skills, worktrees, MCP servers, verification steps) is what turns a prompt into a merged PR.
+        - paragraph [ref=e45]: "This note covers the building blocks I use day to day with Claude Code: skills for repeatable workflows, worktrees for isolated parallel work, the RPIT loop as a structural pattern, and the MCP servers that let the agent see and touch the outside world."
+        - separator [ref=e46]
+        - heading "Brief" [level=2] [ref=e47]
+        - paragraph [ref=e48]: "A \"good loop\" has four properties:"
+        - list [ref=e49]:
+          - listitem [ref=e50]:
+            - strong [ref=e51]: Isolated
+            - text: — work happens in a sandbox the agent can't accidentally trash (a worktree, a branch, a container).
+          - listitem [ref=e52]:
+            - strong [ref=e53]: Observable
+            - text: — the agent can read its own output (logs, screenshots, test results) and correct course.
+          - listitem [ref=e54]:
+            - strong [ref=e55]: Repeatable
+            - text: — the same input produces the same steps. Encoded as a skill or workflow, not improvised every run.
+          - listitem [ref=e56]:
+            - strong [ref=e57]: Reversible
+            - text: — anything destructive needs an explicit confirmation step or a clean undo (delete the worktree, drop the branch).
+        - paragraph [ref=e58]: Skip any one of these and the loop turns into a coin flip. Loop engineering is mostly removing the coin flips.
+        - separator [ref=e59]
+        - heading "The RPIT Loop" [level=2] [ref=e60]
+        - paragraph [ref=e61]:
+          - text: RPIT stands for
+          - strong [ref=e62]: Read → Plan → Implement → Test
+          - text: . It's the default shape for any non-trivial coding task and maps directly to how Claude Code operates.
+        - code [ref=e64]: "┌─────────┐ │ Read │ gather context: files, git log, configs, related code └────┬────┘ ↓ ┌─────────┐ │ Plan │ outline steps; surface trade-offs before writing code └────┬────┘ ↓ ┌─────────┐ │Implement│ edits in small, reviewable diffs └────┬────┘ ↓ ┌─────────┐ │ Test │ build, run, browser-check, type-check — feed errors back └────┬────┘ │ └────── loop back to Read on failure"
+        - table [ref=e65]:
+          - rowgroup [ref=e66]:
+            - row [ref=e67]:
+              - columnheader "Phase" [ref=e68]
+              - columnheader "Goal" [ref=e69]
+              - columnheader "Common tools" [ref=e70]
+          - rowgroup [ref=e71]:
+            - row [ref=e72]:
+              - cell "Read" [ref=e73]
+              - cell "Build a mental model" [ref=e74]
+              - cell [ref=e75]:
+                - code [ref=e76]: Read
+                - text: ","
+                - code [ref=e77]: Grep
+                - text: ","
+                - code [ref=e78]: Explore
+                - text: subagent
+            - row [ref=e79]:
+              - cell "Plan" [ref=e80]
+              - cell "Surface decisions before code" [ref=e81]
+              - cell [ref=e82]:
+                - text: Plan mode,
+                - code [ref=e83]: TaskCreate
+            - row [ref=e84]:
+              - cell "Implement" [ref=e85]
+              - cell "Apply minimal diffs" [ref=e86]
+              - cell [ref=e87]:
+                - code [ref=e88]: Edit
+                - text: ","
+                - code [ref=e89]: Write
+            - row [ref=e90]:
+              - cell "Test" [ref=e91]
+              - cell "Verify in the real environment" [ref=e92]
+              - cell [ref=e93]:
+                - code [ref=e94]: npm run build
+                - text: ", Playwright MCP,"
+                - code [ref=e95]: verify
+                - text: skill
+        - paragraph [ref=e96]:
+          - text: "Why it matters: skipping"
+          - strong [ref=e97]: Read
+          - text: leads to confident-but-wrong edits; skipping
+          - strong [ref=e98]: Plan
+          - text: leads to scope creep; skipping
+          - strong [ref=e99]: Test
+          - text: lets type errors and runtime crashes ship.
+        - separator [ref=e100]
+        - heading "Skills" [level=2] [ref=e101]
+        - paragraph [ref=e102]:
+          - text: A skill is a named, reusable instruction set the agent invokes with a slash command (
+          - code [ref=e103]: /skill-name
+          - text: "). Skills compose the loop: each one encodes a workflow you'd otherwise re-explain in every prompt."
+        - paragraph [ref=e104]: "Three skills I rely on most:"
+        - heading "1. Create Issue Skill" [level=3] [ref=e105]
+        - paragraph [ref=e106]: Turns a free-form request into a well-structured GitHub issue and files it on the right repo.
+        - paragraph [ref=e107]: "What the skill does:"
+        - list [ref=e108]:
+          - listitem [ref=e109]:
+            - text: Reads the current repo context (
+            - code [ref=e110]: gh repo view
+            - text: ","
+            - code [ref=e111]: git remote
+            - text: )
+          - listitem [ref=e112]:
+            - text: Drafts a title (≤70 chars) and a body with
+            - strong [ref=e113]: Problem / Proposal / Acceptance criteria
+          - listitem [ref=e114]: Adds labels and assignees from defaults
+          - listitem [ref=e115]: Confirms with the user before creating
+          - listitem [ref=e116]:
+            - text: Calls
+            - code [ref=e117]: gh issue create
+            - text: with the assembled payload
+        - paragraph [ref=e118]: "Why use a skill instead of writing the issue yourself:"
+        - list [ref=e119]:
+          - listitem [ref=e120]: Title and body shape stay consistent across the repo
+          - listitem [ref=e121]: Labels never get forgotten
+          - listitem [ref=e122]: The agent already has the diff context — it can link to related commits
+          - listitem [ref=e123]: One slash command vs. five back-and-forth messages
+        - paragraph [ref=e124]: "Example invocation:"
+        - code [ref=e126]: /create-issue The TTS button stutters on Safari when switching voices mid-playback
+        - heading "2. Update Docs Skill" [level=3] [ref=e127]
+        - paragraph [ref=e128]:
+          - text: Keeps
+          - code [ref=e129]: CLAUDE.md
+          - text: /
+          - code [ref=e130]: README.md
+          - text: / inline docs honest after a code change. Documentation drift is the silent killer of long-lived repos.
+        - paragraph [ref=e131]: "What the skill does:"
+        - list [ref=e132]:
+          - listitem [ref=e133]:
+            - text: Diffs current branch against
+            - code [ref=e134]: main
+          - listitem [ref=e135]: Identifies docs that reference changed files, commands, or paths
+          - listitem [ref=e136]: Edits the docs in-place
+          - listitem [ref=e137]: Flags ambiguous cases ("this command name changed — keep old as alias?") for the user
+        - paragraph [ref=e138]: Run it as the last step of the RPIT loop, before opening the PR.
+        - heading "3. Cleanup Worktree Skill" [level=3] [ref=e139]
+        - paragraph [ref=e140]:
+          - text: After spawning worktrees for parallel work, you end up with a forest of
+          - code [ref=e141]: ~/.worktrees/feat-*
+          - text: "directories. The cleanup skill:"
+        - list [ref=e142]:
+          - listitem [ref=e143]:
+            - text: Lists all worktrees (
+            - code [ref=e144]: git worktree list
+            - text: )
+          - listitem [ref=e145]: "For each: checks if the branch is merged, the PR is closed, or the tree is dirty"
+          - listitem [ref=e146]: Prunes safe ones, prompts for ambiguous ones, never touches dirty ones without confirmation
+          - listitem [ref=e147]:
+            - text: Runs
+            - code [ref=e148]: git worktree prune
+            - text: to clean stale metadata
+        - paragraph [ref=e149]:
+          - text: Without this, you eventually
+          - code [ref=e150]: cd
+          - text: into a worktree that doesn't exist anymore or run out of disk.
+        - separator [ref=e151]
+        - heading "Worktrees" [level=2] [ref=e152]
+        - paragraph [ref=e153]:
+          - code [ref=e154]: git worktree
+          - text: lets one repo have multiple working directories checked out to different branches at the same time. They share
+          - code [ref=e155]: .git/objects
+          - text: so they're cheap on disk.
+        - code [ref=e157]: "# Create an isolated working dir on a new branch git worktree add ../worktrees/feat-payment-flow -b feat/payment-flow # List them git worktree list # Remove when done (after the branch is merged/deleted) git worktree remove ../worktrees/feat-payment-flow git worktree prune # clean stale metadata"
+        - heading "Why worktrees matter for agent loops" [level=3] [ref=e158]
+        - table [ref=e159]:
+          - rowgroup [ref=e160]:
+            - row [ref=e161]:
+              - columnheader "Problem without worktrees" [ref=e162]
+              - columnheader "What worktrees give you" [ref=e163]
+          - rowgroup [ref=e164]:
+            - row [ref=e165]:
+              - cell "Two agents editing the same file race each other" [ref=e166]
+              - cell "Each agent gets its own directory" [ref=e167]
+            - row [ref=e168]:
+              - cell "Stashing/unstashing to swap tasks" [ref=e169]
+              - cell [ref=e170]:
+                - text: Just
+                - code [ref=e171]: cd
+                - text: between trees
+            - row [ref=e172]:
+              - cell "Long-running test from task A blocks task B" [ref=e173]
+              - cell [ref=e174]:
+                - text: Trees are independent — parallel
+                - code [ref=e175]: npm test
+                - text: is fine
+            - row [ref=e176]:
+              - cell [ref=e177]:
+                - text: Mistakes contaminate
+                - code [ref=e178]: main
+              - cell "Mistakes stay inside the worktree" [ref=e179]
+        - paragraph [ref=e180]:
+          - text: Claude Code's
+          - code [ref=e181]: Agent
+          - text: tool supports
+          - code [ref=e182]: "isolation: \"worktree\""
+          - text: as an option — the subagent gets a fresh worktree, works there, and the parent gets the branch + path back. Use it when subagents will write files that could conflict.
+        - heading "Worktree hygiene" [level=3] [ref=e183]
+        - list [ref=e184]:
+          - listitem [ref=e185]:
+            - text: Keep them under a single parent directory (
+            - code [ref=e186]: ~/worktrees/
+            - text: or
+            - code [ref=e187]: ../worktrees/
+            - text: ).
+          - listitem [ref=e188]:
+            - text: Name them after the branch —
+            - code [ref=e189]: feat-payment-flow
+            - text: ", not"
+            - code [ref=e190]: tmp1
+            - text: .
+          - listitem [ref=e191]:
+            - text: Always remove via
+            - code [ref=e192]: git worktree remove
+            - text: ", never"
+            - code [ref=e193]: rm -rf
+            - text: . The latter leaves stale entries in
+            - code [ref=e194]: .git/worktrees/
+            - text: .
+          - listitem [ref=e195]:
+            - text: Pair every
+            - code [ref=e196]: worktree add
+            - text: with a planned
+            - code [ref=e197]: worktree remove
+            - text: . The cleanup skill enforces this.
+        - separator [ref=e198]
+        - heading "Playwright MCP" [level=2] [ref=e199]
+        - paragraph [ref=e200]: MCP (Model Context Protocol) is the standard for letting agents call external tools. Playwright MCP exposes a real browser to the agent — it can navigate, click, type, screenshot, and read the DOM.
+        - paragraph [ref=e201]: "What you get:"
+        - table [ref=e202]:
+          - rowgroup [ref=e203]:
+            - row [ref=e204]:
+              - columnheader "Capability" [ref=e205]
+              - columnheader "Use" [ref=e206]
+          - rowgroup [ref=e207]:
+            - row [ref=e208]:
+              - cell [ref=e209]:
+                - code [ref=e210]: browser_navigate
+              - cell "Open a URL in a real Chromium" [ref=e211]
+            - row [ref=e212]:
+              - cell [ref=e213]:
+                - code [ref=e214]: browser_snapshot
+              - cell "Get the accessibility tree of the current page" [ref=e215]
+            - row [ref=e216]:
+              - cell [ref=e217]:
+                - code [ref=e218]: browser_click
+              - cell "Click an element by ref" [ref=e219]
+            - row [ref=e220]:
+              - cell [ref=e221]:
+                - code [ref=e222]: browser_type
+              - cell "Fill an input" [ref=e223]
+            - row [ref=e224]:
+              - cell [ref=e225]:
+                - code [ref=e226]: browser_take_screenshot
+              - cell "Capture image for inspection" [ref=e227]
+            - row [ref=e228]:
+              - cell [ref=e229]:
+                - code [ref=e230]: browser_console_messages
+              - cell "Read JS console errors" [ref=e231]
+            - row [ref=e232]:
+              - cell [ref=e233]:
+                - code [ref=e234]: browser_network_requests
+              - cell "Inspect XHR/fetch traffic" [ref=e235]
+        - heading "Why it matters for the loop" [level=3] [ref=e236]
+        - paragraph [ref=e237]:
+          - text: The
+          - strong [ref=e238]: Test
+          - text: "step of RPIT used to mean \"run the test suite.\" For UI work, that's not enough — a test suite can pass while the page renders broken. Playwright MCP closes the loop:"
+        - code [ref=e240]: Implement edit → start dev server → playwright opens http://localhost:3000 → snapshot → check the DOM matches intent → screenshot on failure → fix
+        - paragraph [ref=e241]: This is the difference between "the build passes" and "the feature works."
+        - 'heading "Pattern: agent-driven manual QA" [level=3] [ref=e242]'
+        - list [ref=e243]:
+          - listitem [ref=e244]: Make the change in code.
+          - listitem [ref=e245]:
+            - text: Start the dev server (
+            - code [ref=e246]: npm run dev
+            - text: ) in the background.
+          - listitem [ref=e247]: Use Playwright MCP to navigate to the affected page.
+          - listitem [ref=e248]: Take a snapshot, verify the elements you expected are present.
+          - listitem [ref=e249]: Click through the user flow — agent observes each step.
+          - listitem [ref=e250]: If the snapshot shows the wrong state, go back to Implement.
+        - paragraph [ref=e251]:
+          - text: Pair this with the
+          - code [ref=e252]: verify
+          - text: skill, which packages the dev-server-+-Playwright dance into one slash command.
+        - separator [ref=e253]
+        - heading "Subagents and Parallelism" [level=2] [ref=e254]
+        - paragraph [ref=e255]: "A single conversation has one context window. Long research, broad searches, or fan-out edits will blow past it. Subagents solve this:"
+        - list [ref=e256]:
+          - listitem [ref=e257]:
+            - strong [ref=e258]:
+              - code [ref=e259]: Explore
+            - text: — read-only search agent. Use for "where is X defined?" or "find all callers of Y." Doesn't pollute the main context with grep output.
+          - listitem [ref=e260]:
+            - strong [ref=e261]:
+              - code [ref=e262]: Plan
+            - text: — design an implementation plan without touching files.
+          - listitem [ref=e263]:
+            - strong [ref=e264]:
+              - code [ref=e265]: general-purpose
+            - text: — open-ended multi-step research.
+          - listitem [ref=e266]:
+            - strong [ref=e267]: Custom typed agents
+            - text: — defined per-project (e.g.
+            - code [ref=e268]: code-reviewer
+            - text: ","
+            - code [ref=e269]: claude-code-guide
+            - text: ).
+        - paragraph [ref=e270]:
+          - text: Run them in
+          - strong [ref=e271]: parallel
+          - text: "when independent:"
+        - code [ref=e273]: Agent(Explore, "find every place we call the TTS API") Agent(Explore, "find the audio player component hierarchy") Agent(Explore, "find any existing voice-switching tests")
+        - paragraph [ref=e274]: The parent gets three summaries back instead of three context-bloating tool result dumps.
+        - separator [ref=e275]
+        - heading "Hooks" [level=2] [ref=e276]
+        - paragraph [ref=e277]: Hooks are shell commands the harness runs around tool calls — they're the layer that lets you enforce things the model can't be trusted to remember every time.
+        - paragraph [ref=e278]: "Use cases:"
+        - list [ref=e279]:
+          - listitem [ref=e280]:
+            - text: Auto-format files after
+            - code [ref=e281]: Edit
+            - text: /
+            - code [ref=e282]: Write
+            - text: (
+            - code [ref=e283]: prettier --write
+            - text: )
+          - listitem [ref=e284]:
+            - text: Block commits that touch
+            - code [ref=e285]: .env
+          - listitem [ref=e286]: Re-run type-check after writes
+          - listitem [ref=e287]: Send a desktop notification when the agent finishes
+          - listitem [ref=e288]: Audit log every Bash command
+        - paragraph [ref=e289]:
+          - text: Configured in
+          - code [ref=e290]: ~/.claude/settings.json
+          - text: . Hooks fire deterministically; memory and preferences do not. Use hooks when you need
+          - emphasis [ref=e291]: every
+          - text: matching tool call to do X.
+        - separator [ref=e292]
+        - heading "Memory" [level=2] [ref=e293]
+        - paragraph [ref=e294]: "Persistent file-based notes that survive across conversations. Four types:"
+        - table [ref=e295]:
+          - rowgroup [ref=e296]:
+            - row [ref=e297]:
+              - columnheader "Type" [ref=e298]
+              - columnheader "Holds" [ref=e299]
+          - rowgroup [ref=e300]:
+            - row [ref=e301]:
+              - cell [ref=e302]:
+                - code [ref=e303]: user
+              - cell "Who you are, your role, preferences" [ref=e304]
+            - row [ref=e305]:
+              - cell [ref=e306]:
+                - code [ref=e307]: feedback
+              - cell "Corrections and validations — \"don't do X, do Y\"" [ref=e308]
+            - row [ref=e309]:
+              - cell [ref=e310]:
+                - code [ref=e311]: project
+              - cell "In-flight work, deadlines, decisions, motivations" [ref=e312]
+            - row [ref=e313]:
+              - cell [ref=e314]:
+                - code [ref=e315]: reference
+              - cell "Pointers to external systems (Linear, Grafana, Slack)" [ref=e316]
+        - paragraph [ref=e317]:
+          - text: Memory exists so the agent doesn't make you repeat yourself across sessions. It's not for code patterns or file paths — those are recoverable from the repo. It's for the
+          - emphasis [ref=e318]: why
+          - text: behind decisions and the
+          - emphasis [ref=e319]: who
+          - text: you're working with.
+        - separator [ref=e320]
+        - heading "Workflows" [level=2] [ref=e321]
+        - paragraph [ref=e322]: "When a task fans out — review every file changed, audit N modules, find bugs across a codebase — a one-shot agent isn't enough. Workflows are scripted multi-agent orchestrations:"
+        - code [ref=e324]: phase('Find') → N parallel finders, each with a different lens phase('Verify') → adversarial verifiers refute the findings phase('Synthesize')→ one agent merges survivors into a report
+        - paragraph [ref=e325]: "Key patterns:"
+        - list [ref=e326]:
+          - listitem [ref=e327]:
+            - strong [ref=e328]: Pipeline
+            - text: — items flow through stages independently (no barrier between stages).
+          - listitem [ref=e329]:
+            - strong [ref=e330]: Parallel
+            - text: — fan out, then synchronize (barrier).
+          - listitem [ref=e331]:
+            - strong [ref=e332]: Loop-until-dry
+            - text: — keep finding new issues until K consecutive rounds return nothing new.
+          - listitem [ref=e333]:
+            - strong [ref=e334]: Adversarial verify
+            - text: — every finding faces N independent skeptics; only survivors ship.
+        - paragraph [ref=e335]:
+          - text: "The mental shift: stop asking \"what should the agent do?\" and start asking \"what's the"
+          - emphasis [ref=e336]: shape
+          - text: of the work?" That shape is the workflow.
+        - separator [ref=e337]
+        - heading "Putting It Together" [level=2] [ref=e338]
+        - paragraph [ref=e339]: "A realistic loop for shipping a small feature with Claude Code:"
+        - code [ref=e341]: "1. /create-issue describing the change 2. git worktree add ~/wt/feat-x -b feat/x (or Agent isolation: worktree) 3. RPIT loop in the worktree: Read → Plan → Implement → Test Test = npm run build + Playwright MCP visit to localhost 4. /update-docs (touch CLAUDE.md, README if affected) 5. /code-review (independent agent reviews the diff) 6. Commit, push, gh pr create 7. /cleanup-worktrees (after PR merges)"
+        - paragraph [ref=e342]: Every step is a piece of the loop. Each piece is small, observable, and reversible — together they replace "vibe-coding" with a system that lands work consistently.
+        - separator [ref=e343]
+        - heading "Anti-Patterns" [level=2] [ref=e344]
+        - paragraph [ref=e345]: "Things that quietly destroy your loop quality:"
+        - list [ref=e346]:
+          - listitem [ref=e347]:
+            - strong [ref=e348]: One mega-prompt for the whole feature.
+            - text: Break into RPIT phases.
+          - listitem [ref=e349]:
+            - strong [ref=e350]: Skipping verification because the build passed.
+            - text: A passing build is necessary, not sufficient.
+          - listitem [ref=e351]:
+            - strong [ref=e352]: Letting worktrees pile up.
+            - text: They share git objects but use disk for
+            - code [ref=e353]: node_modules
+            - text: .
+          - listitem [ref=e354]:
+            - strong [ref=e355]: Running agents serially when they could be parallel.
+            - text: A 3-way parallel search finishes in the time of the slowest one, not the sum.
+          - listitem [ref=e356]:
+            - strong [ref=e357]: Putting code patterns into memory.
+            - text: They go stale the moment the code changes. Memory is for
+            - emphasis [ref=e358]: non-derivable
+            - text: context.
+          - listitem [ref=e359]:
+            - strong [ref=e360]: Trusting the agent's summary over the diff.
+            - text: "\"Trust but verify\" — always read the change."
+        - separator [ref=e361]
+        - heading "Further Topics Worth Exploring" [level=2] [ref=e362]
+        - list [ref=e363]:
+          - listitem [ref=e364]:
+            - text: Plan mode (
+            - code [ref=e365]: EnterPlanMode
+            - text: ) for design discussions that shouldn't write code yet
+          - listitem [ref=e366]: Long-running background tasks and the harness notification model
+          - listitem [ref=e367]:
+            - text: Tool deferral /
+            - code [ref=e368]: ToolSearch
+            - text: for keeping the active toolset small
+          - listitem [ref=e369]:
+            - text: Custom agent definitions in
+            - code [ref=e370]: .claude/agents/
+          - listitem [ref=e371]: Slash-command vs. skill vs. workflow — when to pick each
+          - listitem [ref=e372]: "Cost shaping: token budgets and the prompt cache TTL (5 min)"
+      - link "All notes" [ref=e374] [cursor=pointer]:
+        - /url: /
+  - alert [ref=e377]

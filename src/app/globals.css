@@ -221,6 +221,17 @@ body {
     --bg: #ffffff;
     --fg: #111111;
     --code-bg: #f6f8fa;
+
+    /* Force GitHub-light syntax tokens: printing from dark mode would otherwise
+       leave bright pastel colors on the light --code-bg, killing contrast. */
+    --hl-fg: #24292e;
+    --hl-comment: #6a737d;
+    --hl-keyword: #d73a49;
+    --hl-string: #032f62;
+    --hl-number: #005cc5;
+    --hl-title: #6f42c1;
+    --hl-attr: #005cc5;
+    --hl-symbol: #e36209;
   }
 
   html,
