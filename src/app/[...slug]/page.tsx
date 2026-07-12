@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Header } from "@/components/header";
 import { Markdown } from "@/components/markdown";
 import { ListenButton } from "@/components/tts/listen-button";
+import { ExportMenu } from "@/components/export/export-menu";
 import { getAllNotes, getNoteBySlug } from "@/lib/notes";
 
 export function generateStaticParams() {
@@ -65,7 +66,10 @@ export default async function NotePage({
             <span className="inline-block rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium tracking-wide text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
               {note.group ?? note.categoryLabel}
             </span>
-            <ListenButton title={note.title} text={note.plain} />
+            <div className="flex items-center gap-2">
+              <ListenButton title={note.title} text={note.plain} />
+              <ExportMenu slug={note.slug} body={note.body} />
+            </div>
           </div>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl dark:text-neutral-50">
             {note.title}
