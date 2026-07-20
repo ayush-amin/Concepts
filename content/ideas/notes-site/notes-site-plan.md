@@ -1,6 +1,6 @@
 # Notes Site Plan
 
-**Goal:** A personal site that serves the markdown notes in this repo (`devops/`, `system-design/`, `ideas/`) as a clean, browsable web app — reusing the frontend, design system, and logo from the [Concepts](https://github.com/apk471/Concepts) repo.
+**Goal:** A personal site that serves the markdown notes in this repo (`devops/`, `system-design/`, `ideas/`) as a clean, browsable web app — reusing the frontend, design system, and logo from the [Concepts](https://github.com/ayush-amin/Concepts) repo.
 **Deploy target:** Vercel
 **Status:** Planning — pending review before implementation.
 
