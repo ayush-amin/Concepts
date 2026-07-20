@@ -19,7 +19,7 @@ Everything here lives in my dotfiles repo, symlinked into place. The configs are
 the source of truth; a new machine is one `git clone` + a few `ln -sf` away from
 identical.
 
-> **Dotfiles repo:** [github.com/apk471/dotfiles](https://github.com/apk471/dotfiles)
+> **Dotfiles repo:** [github.com/ayush-amin/dotfiles](https://github.com/ayush-amin/dotfiles)
 
 ---
 
@@ -155,4 +155,4 @@ Two reasons that are specifically about *agentic* work:
 2. **The backup is itself agent-operated** — the `CLAUDE.md` workflow above makes
    syncing configs a safe, repeatable agent task rather than manual copying.
 
-Repo: **[github.com/apk471/dotfiles](https://github.com/apk471/dotfiles)**
+Repo: **[github.com/ayush-amin/dotfiles](https://github.com/ayush-amin/dotfiles)**
