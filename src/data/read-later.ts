@@ -56,6 +56,23 @@ export const READ_LATER: ReadLaterItem[] = [
     status: "to-read",
   },
   {
+    id: "baseten-gpt2-to-kimi-k3",
+    title: "22,580: GPT-2 to Kimi K3, explained",
+    type: "blog",
+    url: "https://www.baseten.co/blog/22580-gpt-2-to-kimi-k3-explained/",
+    by: "Ali Taha · Baseten",
+    note: "Traces LLM architecture from GPT-2 to Kimi K3 — attention, memory, expert routing.",
+    status: "to-read",
+  },
+  {
+    id: "waterloo-intern-x-article",
+    title: "Article by @waterloo_intern",
+    type: "blog",
+    url: "https://x.com/waterloo_intern/article/2081762065392541951",
+    by: "@waterloo_intern · X",
+    status: "to-read",
+  },
+  {
     id: "codecrafters-project-ideas",
     title: "Programming Project Ideas",
     type: "blog",

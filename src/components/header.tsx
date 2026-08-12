@@ -60,10 +60,10 @@ export function Header() {
         <nav className="flex items-center gap-1">
           <button
             onClick={openSearch}
-            className="flex h-8 items-center gap-2 rounded-lg border border-neutral-200 bg-neutral-50 px-2 text-xs text-neutral-400 transition-colors hover:border-neutral-300 hover:text-neutral-600 sm:mr-1 sm:px-2.5 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-700 dark:hover:text-neutral-300"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900 sm:mr-1 sm:w-auto sm:justify-start sm:gap-2 sm:border sm:border-neutral-200 sm:bg-neutral-50 sm:px-2.5 sm:text-xs sm:text-neutral-400 sm:hover:border-neutral-300 sm:hover:bg-neutral-50 sm:hover:text-neutral-600 dark:text-neutral-400 dark:hover:bg-neutral-800 dark:hover:text-neutral-100 sm:dark:border-neutral-800 sm:dark:bg-neutral-900 sm:dark:hover:border-neutral-700 sm:dark:hover:bg-neutral-900 sm:dark:hover:text-neutral-300"
             aria-label="Search notes"
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" className="sm:h-[13px] sm:w-[13px]">
               <circle cx="11" cy="11" r="7" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
