@@ -194,6 +194,14 @@ export function CategoryIcon({ name, className }: IconProps) {
           <circle cx="18" cy="6" r="2.2" fill="currentColor" stroke="none" />
         </svg>
       );
+    case "feed":
+      return (
+        <svg {...common}>
+          <rect x="4" y="3" width="16" height="6" rx="1.5" />
+          <rect x="4" y="11" width="16" height="6" rx="1.5" />
+          <path d="M7 20h10" />
+        </svg>
+      );
     default:
       return (
         <svg {...common}>
