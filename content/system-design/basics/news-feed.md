@@ -48,49 +48,27 @@ Two independent flows share a data layer.
 
 ### Feed Publishing
 
-```text
-   ┌──────────┐
-   │  Client  │  POST /v1/posts
-   └────┬─────┘
-        ↓
-   ┌──────────────┐
-   │ Load Balancer│
-   └────┬─────────┘
-        ↓
-   ┌──────────────┐      ┌──────────────┐
-   │ Post Service │─────→│ Post DB +    │
-   │ (write path) │      │ Post Cache   │
-   └────┬─────────┘      └──────────────┘
-        ↓ enqueue
-   ┌──────────────┐
-   │ Fan-out MQ   │  (Kafka / SQS)
-   └────┬─────────┘
-        ↓
-   ┌──────────────┐      ┌──────────────┐
-   │ Fan-out      │←─────│ Graph DB     │  (who follows whom)
-   │ Workers      │      └──────────────┘
-   └────┬─────────┘
-        ↓ write post_id into each follower's feed
-   ┌──────────────┐
-   │ Feed Cache   │  Redis: user_id → [post_id, ...]
-   └──────────────┘
+```mermaid
+flowchart TD
+  C[Client] -->|"POST /v1/posts"| LB[Load Balancer]
+  LB --> PS["Post Service<br/>(write path)"]
+  PS --> PDB["Post DB<br/>+ Post Cache"]
+  PS -->|enqueue| MQ["Fan-out MQ<br/>(Kafka / SQS)"]
+  MQ --> FW[Fan-out Workers]
+  GDB["Graph DB<br/>(who follows whom)"] --> FW
+  FW -->|"write post_id into<br/>each follower's feed"| FC["Feed Cache<br/>(Redis: user_id to post_id list)"]
 ```
 
 ### Feed Building (read)
 
-```text
-   ┌──────────┐
-   │  Client  │  GET /v1/feed?cursor=…
-   └────┬─────┘
-        ↓
-   ┌──────────────┐
-   │ Feed Service │  1. read post IDs from feed cache
-   └────┬─────────┘  2. hydrate posts + authors
-        ↓            3. rank / filter
-   ┌───────────────────────────────────┐
-   │ Post Cache │ User Cache │ Media   │
-   │            │            │ CDN     │
-   └───────────────────────────────────┘
+```mermaid
+flowchart LR
+  C[Client] -->|"GET /v1/feed?cursor=…"| FS[Feed Service]
+  FS -->|"1. read post IDs"| FC[Feed Cache]
+  FS -->|"2. hydrate posts"| PC[Post Cache]
+  FS -->|"2. hydrate authors"| UC[User Cache]
+  FS -->|"3. rank / filter"| PAGE["Feed page<br/>(media URLs to CDN)"]
+  PAGE --> CDN[Media CDN]
 ```
 
 ### Components at a glance
