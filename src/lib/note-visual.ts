@@ -6,6 +6,7 @@ export function resolveIcon(slug: string, title: string, category: string): stri
   const rules: [RegExp, string][] = [
     [/loop[- ]?engineer|agent[- ]?loop|rpit|read[- ]?plan[- ]?implement/, "loop"],
     [/web[- ]?crawl|crawler|spider|url[- ]?frontier/, "crawler"],
+    [/news[- ]?feed|timeline|fan[- ]?out|\bfeed\b/, "feed"],
     [/capacity|qps|throughput|estimat/, "capacity"],
     [/message[- ]?queue|kafka|rabbit|\bqueue/, "queue"],
     [/pub[- ]?sub|publish|subscrib|broadcast/, "pubsub"],

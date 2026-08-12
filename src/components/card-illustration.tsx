@@ -247,6 +247,18 @@ export function CardIllustration({ name }: Props) {
           <circle cx="124" cy="30" r="6" fill="currentColor" stroke="none" />
         </svg>
       );
+    case "feed":
+      // stacked feed cards fanning out from a single source post
+      return (
+        <svg {...common}>
+          <circle cx="34" cy="45" r="9" />
+          <path d="M43 45h17M60 45 82 26M60 45l22 19" />
+          <rect x="92" y="12" width="76" height="22" rx="3" />
+          <rect x="92" y="34" width="76" height="22" rx="3" />
+          <rect x="92" y="56" width="76" height="22" rx="3" />
+          <path d="M100 23h12M120 23h30M100 45h12M120 45h38M100 67h12M120 67h24" />
+        </svg>
+      );
     default:
       // document
       return (
