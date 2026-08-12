@@ -48,45 +48,21 @@ Mid-size product, 10M daily active users:
 
 ## High-Level Design
 
-```text
-   ┌───────────────────┐
-   │ Upstream services │  (order placed, friend request, alert, etc.)
-   └─────────┬─────────┘
-             ↓ HTTP / event
-   ┌───────────────────┐
-   │ Notification API  │  validates, hydrates payload, applies preferences
-   │ Server            │
-   └─────────┬─────────┘
-             ↓
-   ┌───────────────────┐         ┌──────────────────┐
-   │ Notification      │←────────│ User & Device    │
-   │ Orchestrator      │         │ DB / Preferences │
-   └───┬──────┬────┬───┘         └──────────────────┘
-       ↓      ↓    ↓
-   ┌───────┐┌────┐┌───────┐
-   │ Push  ││ SMS││ Email │   per-channel queues (Kafka / RabbitMQ)
-   │ Queue ││Qeu ││ Queue │
-   └───┬───┘└─┬──┘└───┬───┘
-       ↓      ↓       ↓
-   ┌───────┐┌────┐┌───────┐
-   │ Push  ││ SMS││ Email │   per-channel workers
-   │Worker ││Wkr ││Worker │
-   └───┬───┘└─┬──┘└───┬───┘
-       ↓      ↓       ↓
-   ┌───────┐┌────┐┌───────┐
-   │ APNs  ││Twil││SendGr │   third-party providers
-   │ FCM   ││io  ││id/SES │
-   └───────┘└────┘└───────┘
-             ↓
-   ┌───────────────────┐
-   │ Delivery status   │   webhooks, async receipts
-   │ collector         │
-   └─────────┬─────────┘
-             ↓
-   ┌───────────────────┐
-   │ Analytics / Audit │
-   │ DB                │
-   └───────────────────┘
+```mermaid
+flowchart TD
+  UP["Upstream services<br/>(order placed, friend request, alert)"] -->|"HTTP / event"| API["Notification API Server<br/>(validate, hydrate, apply preferences)"]
+  API --> ORCH[Notification Orchestrator]
+  UDB["User &amp; Device DB<br/>/ Preferences"] --> ORCH
+  ORCH --> PQ[Push Queue]
+  ORCH --> SQ[SMS Queue]
+  ORCH --> EQ[Email Queue]
+  PQ --> PW[Push Worker] --> APNS["APNs / FCM"]
+  SQ --> SW[SMS Worker] --> TW[Twilio]
+  EQ --> EW[Email Worker] --> SG["SendGrid / SES"]
+  APNS -->|"webhooks, receipts"| DSC[Delivery Status Collector]
+  TW -->|"webhooks, receipts"| DSC
+  SG -->|"webhooks, receipts"| DSC
+  DSC --> AUD["Analytics / Audit DB"]
 ```
 
 ### Why per-channel queues
