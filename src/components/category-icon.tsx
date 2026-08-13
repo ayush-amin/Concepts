@@ -202,6 +202,14 @@ export function CategoryIcon({ name, className }: IconProps) {
           <path d="M7 20h10" />
         </svg>
       );
+    case "search":
+      return (
+        <svg {...common}>
+          <circle cx="10" cy="9.5" r="5.5" />
+          <path d="M14 13.5 19 19" />
+          <path d="M6 21h12" />
+        </svg>
+      );
     default:
       return (
         <svg {...common}>

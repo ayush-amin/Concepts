@@ -259,6 +259,17 @@ export function CardIllustration({ name }: Props) {
           <path d="M100 23h12M120 23h30M100 45h12M120 45h38M100 67h12M120 67h24" />
         </svg>
       );
+    case "search":
+      // magnifier over a suggestion dropdown
+      return (
+        <svg {...common}>
+          <circle cx="46" cy="38" r="16" />
+          <path d="M58 50 72 64" />
+          <rect x="88" y="16" width="82" height="18" rx="3" />
+          <path d="M96 25h30" />
+          <path d="M88 44h64M88 54h50M88 64h58" />
+        </svg>
+      );
     default:
       // document
       return (
