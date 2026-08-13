@@ -7,6 +7,7 @@ export function resolveIcon(slug: string, title: string, category: string): stri
     [/loop[- ]?engineer|agent[- ]?loop|rpit|read[- ]?plan[- ]?implement/, "loop"],
     [/web[- ]?crawl|crawler|spider|url[- ]?frontier/, "crawler"],
     [/news[- ]?feed|timeline|fan[- ]?out|\bfeed\b/, "feed"],
+    [/autocomplete|typeahead|\bsearch\b|\btrie\b/, "search"],
     [/capacity|qps|throughput|estimat/, "capacity"],
     [/message[- ]?queue|kafka|rabbit|\bqueue/, "queue"],
     [/pub[- ]?sub|publish|subscrib|broadcast/, "pubsub"],
