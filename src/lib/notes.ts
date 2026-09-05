@@ -23,19 +23,24 @@ const CATEGORY_META: Record<string, { label: string; order: number; blurb: strin
     order: 1,
     blurb: "Agent loops, Claude Code skills, worktrees, and MCP servers.",
   },
+  learnings: {
+    label: "Learnings",
+    order: 2,
+    blurb: "A running log of things I picked up, newest first.",
+  },
   "system-design": {
     label: "System Design",
-    order: 2,
+    order: 3,
     blurb: "Fundamentals, capacity planning, and an interview framework.",
   },
   devops: {
     label: "DevOps",
-    order: 3,
+    order: 4,
     blurb: "CI/CD, Docker, and GitHub Actions for backend services.",
   },
   ideas: {
     label: "Ideas",
-    order: 4,
+    order: 5,
     blurb: "Project plans, experiments, and things worth building.",
   },
 };
