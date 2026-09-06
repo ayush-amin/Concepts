@@ -32,6 +32,8 @@ export function resolveIcon(slug: string, title: string, category: string): stri
   }
 
   switch (category) {
+    case "learnings":
+      return "list";
     case "system-design":
       return "architecture";
     case "devops":
