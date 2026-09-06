@@ -270,6 +270,22 @@ export function CardIllustration({ name }: Props) {
           <path d="M88 44h64M88 54h50M88 64h58" />
         </svg>
       );
+    case "network":
+      // three-layer neural net: nodes in columns, fully connected
+      return (
+        <svg {...common}>
+          <circle cx="44" cy="24" r="6" />
+          <circle cx="44" cy="45" r="6" />
+          <circle cx="44" cy="66" r="6" />
+          <circle cx="100" cy="18" r="6" />
+          <circle cx="100" cy="39" r="6" />
+          <circle cx="100" cy="60" r="6" />
+          <circle cx="156" cy="34" r="6" />
+          <circle cx="156" cy="55" r="6" />
+          <path d="M50 24h44M50 24 94 39M50 45 94 22M50 45h44M50 45 94 58M50 66 94 43M50 66h44" />
+          <path d="M106 18 150 32M106 39 150 34M106 39 150 55M106 60 150 57" />
+        </svg>
+      );
     default:
       // document
       return (
