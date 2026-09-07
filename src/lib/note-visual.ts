@@ -5,6 +5,7 @@ export function resolveIcon(slug: string, title: string, category: string): stri
 
   const rules: [RegExp, string][] = [
     [/loop[- ]?engineer|agent[- ]?loop|rpit|read[- ]?plan[- ]?implement/, "loop"],
+    [/neural[- ]?net|transformer|attention|embedding|perceptron|backprop/, "network"],
     [/web[- ]?crawl|crawler|spider|url[- ]?frontier/, "crawler"],
     [/news[- ]?feed|timeline|fan[- ]?out|\bfeed\b/, "feed"],
     [/autocomplete|typeahead|\bsearch\b|\btrie\b/, "search"],
